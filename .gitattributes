@@ -1,0 +1,5 @@
+# Normalize line endings to avoid cross-platform merge noise
+* text=auto eol=lf
+
+# Prefer union-style merges for markdown docs to reduce non-critical conflicts
+*.md merge=union
