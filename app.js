@@ -94,6 +94,21 @@ function parseByType(type, value) {
   return String(value);
 }
 
+function toDatetimeLocalValue(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 16);
+}
+
+function fromDatetimeLocalValue(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString();
+}
+
 function getPreviewPayload() {
   return {
     datasetInfo: appState.datasetInfo,
@@ -237,6 +252,11 @@ function commitRowsToDraft(kind, rows) {
 function addTagFromInput() {
   const value = currentTagInput.trim();
   if (!value) return;
+  if (appState.draftRecord.tags.includes(value)) {
+    currentTagInput = "";
+    render();
+    return;
+  }
   appState.draftRecord.tags = [...appState.draftRecord.tags, value];
   currentTagInput = "";
   render();
@@ -255,6 +275,9 @@ function validateDraft() {
   if (featureError) return featureError;
   const labelError = validateRows(labelRows, "Labels");
   if (labelError) return labelError;
+  if (new Set(appState.draftRecord.tags).size !== appState.draftRecord.tags.length) {
+    return "Tags must be unique.";
+  }
   return "";
 }
 
@@ -486,7 +509,7 @@ function render() {
             </select>
           </label>
           <label>Timestamp
-            <input type="datetime-local" value="${appState.draftRecord.meta.timestamp}" oninput="appState.draftRecord.meta.timestamp=this.value;syncMetaRowsToDraft();" />
+            <input type="datetime-local" value="${toDatetimeLocalValue(appState.draftRecord.meta.timestamp)}" oninput="appState.draftRecord.meta.timestamp=fromDatetimeLocalValue(this.value);syncMetaRowsToDraft();" />
           </label>
         </div>
         ${customMetaHtml}

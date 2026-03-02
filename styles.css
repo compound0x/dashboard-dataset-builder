@@ -70,6 +70,20 @@ input, select, textarea {
 
 textarea { min-height: 88px; resize: vertical; }
 
+input:focus, select:focus, textarea:focus, button:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent) 35%, white);
+  outline-offset: 1px;
+}
+
+button:hover {
+  background: #f8fafc;
+}
+
+button.primary:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
 .json-preview {
   min-height: 340px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -116,6 +130,7 @@ button.danger { color: var(--danger); border-color: #f4c5c5; }
 
 .badge {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.4rem;
   border: 1px solid var(--line);
